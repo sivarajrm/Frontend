@@ -1,0 +1,174 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* THEME COLOR */
+:root {
+  --theme-bg: #e9f1ff;
+}
+
+/* ===================== HEADER ===================== */
+.app-header {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  height: 70px;
+  background: var(--theme-bg);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Left Menu Button */
+.menu-button {
+  font-size: 26px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Right side (Title + Small Logo) */
+.header-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Main Heading Text */
+.header-right h2 {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* Small header logo beside title */
+.header-small-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+/* Mobile responsive header */
+@media (max-width: 768px) {
+  .header-small-logo {
+    width: 26px;
+    height: 26px;
+  }
+
+  .header-right h2 {
+    font-size: 18px;
+  }
+}
+
+/* ===================== SIDEBAR ===================== */
+
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  background: var(--theme-bg);
+  color: #000;
+  padding-top: 20px;
+  position: fixed;
+  top: 70px; /* Below header */
+  left: 0;
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease-in-out;
+}
+
+.sidebar.closed {
+  transform: translateX(-240px);
+}
+
+/* Sidebar Title */
+.sidebar h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 15px 20px;
+}
+
+/* Sidebar Links */
+.sidebar a {
+  text-decoration: none;
+  color: #1a1a1a;
+  font-size: 18px;
+  font-weight: 500;
+  display: block;
+  padding: 12px 20px;
+  transition: background 0.2s, color 0.2s;
+}
+
+/* Active Page */
+.sidebar a.active {
+  background: #4A90FF;
+  color: white;
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+/* Hover */
+.sidebar a:hover {
+  background: #dce9ff;
+  color: #000;
+  font-weight: 600;
+}
+
+/* ===================== PAGE LAYOUT ===================== */
+
+.layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  padding-top: 70px;
+}
+
+/* ----- FIX LOGIN PAGE ALIGNMENT ----- */
+.login-layout {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding-top: 0 !important;
+  background: #f3f6fb; /* same light background */
+  height: 100vh;
+}
+
+.login-layout .app-content {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+
+/* Page content shifts when sidebar opens */
+.sidebar-open .app-content {
+  margin-left: 240px;
+}
+
+/* Main content area */
+.app-content {
+  width: 100%;
+  padding: 30px;
+  transition: margin-left 0.3s ease-in-out;
+}
+
+/* MOBILE SIDEBAR OVERLAY MODE */
+@media (max-width: 900px) {
+  .sidebar-open .app-content {
+    margin-left: 0;
+  }
+}
+
+
+/* ===================== Login Page Logo ===================== */
+.logo {
+  width: 140px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
+  image-rendering: -webkit-optimize-contrast;
+}

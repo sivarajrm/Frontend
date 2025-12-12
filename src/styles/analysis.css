@@ -1,0 +1,56 @@
+.analysis-container {
+  padding: 40px;
+  transition: margin-left 0.3s ease, width 0.3s ease;
+  max-width: 1100px;
+  margin: auto;
+}
+
+/* When sidebar is open */
+.analysis-container.shifted {
+  margin-left: 270px;
+}
+
+/* Ensure centered layout when sidebar closed */
+.analysis-container.full {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Chart layout fix */
+.chart-grid {
+  display: grid;
+  gap: 25px;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  padding-top: 20px;
+}
+
+.chart-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+
+.chart-card h3 {
+  margin-bottom: 10px;
+}
+
+.chart {
+  width: 100%;
+  height: 350px;
+}
+
+.desc {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.analysis-container {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

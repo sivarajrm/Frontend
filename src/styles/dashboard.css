@@ -1,0 +1,57 @@
+.dashboard-container {
+  width: 100%;
+  min-height: 100vh;
+  padding-top: 40px;
+  text-align: center;
+  transition: margin-left 0.3s ease;
+}
+
+/* When sidebar open → shift content */
+.dashboard-container.shifted {
+  margin-left: 220px;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+/* Cards layout */
+.metrics-grid {
+  display: grid;
+  gap: 25px;
+  width: 75%;
+  margin: auto;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  justify-items: center;
+}
+
+/* Card Design */
+.metric-card {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.06);
+  transition: transform 0.25s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-5px);
+}
+
+.metric-card h3 {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+.metric-card p {
+  font-size: 18px;
+  font-weight: 600;
+}

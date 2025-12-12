@@ -1,0 +1,156 @@
+/* Container alignment */
+.chat-container {
+  max-width: 750px;
+  margin: auto;
+  padding: 30px;
+  transition: margin-left 0.3s ease;
+}
+
+/* Moves when sidebar opens */
+.chat-container.shifted {
+  margin-left: 270px;
+}
+
+.chat-container.full {
+  margin-left: 0;
+}
+
+/* Title */
+.chat-container h1 {
+  font-size: 2rem;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Chat area */
+.chat-box {
+  background: #fff;
+  border-radius: 15px;
+  height: 420px;
+  padding: 15px;
+  
+  overflow-y: auto;
+  box-shadow: 0px 4px 15px rgba(0,0,0,0.06);
+}
+
+/* Chat bubbles */
+.chat-bubble {
+  display: inline-block;
+  padding: 10px 16px;
+  margin: 8px 0;
+  border-radius: 16px;
+  max-width: 80%;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* User messages */
+.chat-bubble.user {
+  align-self: flex-end;
+  background: #2563eb;
+  color: white;
+  margin-left: auto;
+}
+
+/* Bot messages */
+.chat-bubble.bot {
+  background: #eef3ff;
+  color: #000;
+}
+
+/* Input area */
+.chat-input-row {
+  display: flex;
+  margin-top: 18px;
+  gap: 10px;
+}
+
+.chat-input-row input {
+  flex: 1;
+  padding: 12px 15px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+.chat-input-row button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.25s;
+}
+
+.chat-input-row button:hover {
+  background: #1e4fd9;
+}
+
+/* Scrollbar styling */
+.chat-box::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+  background: #cccccc;
+  border-radius: 10px;
+}
+
+/*  Clear button */
+.clear-btn {
+  background: #f44336;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.clear-btn:hover {
+  background: #d63228;
+}
+
+/* Layout for header */
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/*  Typing animation */
+.typing-indicator {
+  display: flex;
+  gap: 5px;
+  margin: 10px 0;
+  padding: 8px 15px;
+  background: #eef3ff;
+  width: fit-content;
+  border-radius: 12px;
+}
+
+.typing-indicator span {
+  width: 8px;
+  height: 8px;
+  background: #6c6c6c;
+  border-radius: 50%;
+  animation: blink 1.4s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes blink {
+  0%, 80%, 100% { opacity: 0.2; }
+  40% { opacity: 1; }
+}

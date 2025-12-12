@@ -1,0 +1,80 @@
+/* Base container styling */
+.insight-container {
+  padding: 40px;
+  transition: all 0.35s ease-in-out;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Sidebar Open (adjust width based on your sidebar size) */
+.insight-container.shifted {
+  margin-left: 260px; /* Sidebar width */
+}
+
+/* Sidebar Closed */
+.insight-container.full {
+  margin-left: 60px; /* Keep slight space so layout doesn't jump too far left */
+}
+
+/* Title */
+.insight-container h1 {
+  text-align: center;
+  font-size: 2.3rem;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  color: #777;
+}
+
+/* Content cards */
+.insight-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.insight-card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 18px;
+  box-shadow: 0px 6px 20px rgba(0,0,0,0.07);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+/* Hover Effect */
+.insight-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0px 10px 24px rgba(0,0,0,0.12);
+}
+
+.insight-card h3 {
+  margin-bottom: 12px;
+  font-size: 1.3rem;
+}
+
+/* Risk Indicator Colors */
+.risk.low { color: #2ecc71; font-weight: bold; }
+.risk.moderate { color: #f39c12; font-weight: bold; }
+.risk.high { color: #e74c3c; font-weight: bold; }
+
+/* 📱 Responsive Fix */
+@media (max-width: 768px) {
+  .insight-container.shifted {
+    margin-left: 0;  /* Sidebar overlays on mobile, so no shift */
+  }
+
+  .insight-container.full {
+    margin-left: 0;
+  }
+
+  .insight-wrapper {
+    width: 95%;
+  }
+}

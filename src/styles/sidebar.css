@@ -1,0 +1,108 @@
+.sidebar {
+  width: 220px;
+  height: 100vh;
+  background: #f2f6ff;
+  padding: 20px;
+  position: fixed;
+  left: 0;
+  top: 70px; /* below header */
+  transition: 0.3s ease;
+  overflow: hidden;
+  border-right: 1px solid #dce3f1;
+}
+
+.sidebar.closed {
+  width: 60px;
+}
+
+.sidebar-header h2 {
+  margin-left: 5px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.menu {
+  margin-top: 20px;
+  list-style: none;
+  padding: 0;
+}
+
+.menu li {
+  margin: 15px 0;
+}
+
+.menu a {
+  text-decoration: none;
+  font-size: 16px;
+  color: #333;
+  padding: 10px;
+  display: block;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.menu a.active {
+  background: #3b82f6;
+  color: white;
+}
+
+.menu a:hover {
+  background: #e6ecff;
+}
+
+.sidebar.closed .menu a {
+  text-align: center;
+  font-size: 0px;
+  padding: 12px;
+}
+
+.sidebar.closed h2 {
+  display: none;
+}
+
+/* Sidebar Base */
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  position: fixed;
+  background: #111;
+  color: white;
+  padding: 20px;
+  top: 60px;
+  left: 0;
+  transition: transform 0.3s ease;
+}
+
+/* Hidden sidebar */
+.sidebar.closed {
+  transform: translateX(-260px);
+}
+
+.sidebar h2 {
+  margin-bottom: 30px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 18px 0;
+}
+
+.sidebar a {
+  color: #ccc;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  color: #fff;
+}
+
+.logout-btn:hover {
+  background: #e63939;
+}
+
