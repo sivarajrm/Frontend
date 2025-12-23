@@ -65,7 +65,7 @@ function AppWrapper() {
 
   // ---------------- BACKEND CONNECTIVITY CHECK ----------------
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/test").catch(() =>
+    fetch("https://backend-health-system.onrender.com/").catch(() =>
       console.warn("⚠ Backend offline")
     );
   }, []);
