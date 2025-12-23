@@ -9,10 +9,7 @@ export default function Insights({ sidebarOpen }) {
 
   useEffect(() => {
     const account = instance.getActiveAccount();
-    if (!account) {
-      console.warn("No active user found");
-      return;
-    }
+    if (!account) return;
 
     const userId = account.localAccountId;
 
@@ -22,10 +19,7 @@ export default function Insights({ sidebarOpen }) {
         setInsight(data);
         setLoading(false);
       })
-      .catch((err) => {
-        console.error("Insight fetch error:", err);
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
   }, [instance]);
 
   if (loading) {
@@ -36,23 +30,45 @@ export default function Insights({ sidebarOpen }) {
     return <p style={{ textAlign: "center" }}>No AI insights available yet.</p>;
   }
 
-  // Convert comma-separated strings to array safely
-  const toList = (value) =>
-    typeof value === "string"
-      ? value.split(/[,|\n|-]/).filter((x) => x.trim() !== "")
-      : [];
+  /* 🔥 CLEAN + CONVERT TO BULLET POINTS */
+  const toPoints = (text) => {
+    if (!text) return [];
+
+    return text
+      .replace(/\*\*(.*?)\*\*/g, "$1")   // remove **bold**
+      .replace(/[-•]/g, "")               // remove bullets/dashes
+      .replace(/\n+/g, " ")               // remove line breaks
+      .replace(/\s+/g, " ")               // normalize spaces
+      .split(". ")                        // split sentences
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0);
+  };
+
+  /* 🔹 Reusable Bullet Renderer */
+  const BulletList = ({ text }) => {
+    const points = toPoints(text);
+    return (
+      <ul className="insight-points">
+        {points.map((p, i) => (
+          <li key={i}>{p.endsWith(".") ? p : p + "."}</li>
+        ))}
+      </ul>
+    );
+  };
 
   return (
     <div className={`insight-container ${sidebarOpen ? "shifted" : "full"}`}>
       <h1>AI Health Insights</h1>
-      <p className="subtitle">Personalized recommendations based on your health data</p>
+      <p className="subtitle">
+        Personalized recommendations based on your health data
+      </p>
 
       <div className="insight-wrapper">
 
         {/* Summary */}
         <div className="insight-card">
           <h3>Summary</h3>
-          <p>{insight.summary}</p>
+          <BulletList text={insight.summary} />
         </div>
 
         {/* Risk Level */}
@@ -66,31 +82,19 @@ export default function Insights({ sidebarOpen }) {
         {/* Diet */}
         <div className="insight-card">
           <h3>Recommended Diet</h3>
-          <ul>
-            {toList(insight.diet).map((item, i) => (
-              <li key={i}>{item.trim()}</li>
-            ))}
-          </ul>
+          <BulletList text={insight.diet} />
         </div>
 
         {/* Fitness */}
         <div className="insight-card">
           <h3>Fitness Guidance</h3>
-          <ul>
-            {toList(insight.fitness).map((item, i) => (
-              <li key={i}>{item.trim()}</li>
-            ))}
-          </ul>
+          <BulletList text={insight.fitness} />
         </div>
 
         {/* Goals */}
         <div className="insight-card">
           <h3>Health Goals</h3>
-          <ul>
-            {toList(insight.goals).map((item, i) => (
-              <li key={i}>{item.trim()}</li>
-            ))}
-          </ul>
+          <BulletList text={insight.goals} />
         </div>
 
       </div>

@@ -1,40 +1,58 @@
+/* ================= LOGIN PAGE ================= */
+
 .login-container {
+  width: 100vw;
   height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  background: #f5f7fb;
+  justify-content: center;
+  background-color: transparent;
 }
 
 .login-box {
-  width: 400px;
   background: white;
-  padding: 40px;
-  border-radius: 18px;
-  box-shadow: 0px 6px 24px rgba(0,0,0,0.12);
-  text-align: center;
+  border-radius: 20px;
 }
 
+
+/* ================= LOGO ================= */
+
 .logo {
-  width: 120px;
+  width: 140px;
   margin-bottom: 20px;
 }
 
+/* ================= TITLE ================= */
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #000;
+}
+
+/* ================= MICROSOFT BUTTON ================= */
+
 .ms-login-btn {
   width: 100%;
-  background: #2563eb;
-  color: white;
-  border: none;
   padding: 14px;
+
   border-radius: 10px;
-  cursor: pointer;
-  margin-top: 25px;
+  border: none;
+
+  background-color: #2563eb;
+  color: #ffffff;
+
   font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .ms-login-btn:hover {
-  background: #1e50c3;
+  background-color: #1e4fd8;
 }
+
+/* ================= OPTIONAL ================= */
 
 .forgot-btn {
   background: none;

@@ -1,3 +1,4 @@
+
 // ---------------- IMPORTS ----------------
 import React, { useState, useEffect } from "react";
 import {
@@ -21,9 +22,19 @@ import Dashboard from "./pages/Dashboard";
 import Insights from "./pages/Insights";
 import Profile from "./pages/Profile";
 import Analysis from "./pages/Analysis";
-import ChatBot from "./pages/ChatBot";
 
+import ChatBot from "./pages/ChatBot";
 import Sidebar from "./components/Sidebar";
+import BackgroundVideo from "./components/BackgroundVideo";
+
+// 🔥 GLOBAL LOADER
+import GlobalLoader from "./components/GlobalLoader";
+import useRouteLoader from "./hooks/useRouteLoader";
+
+import AdminRoute from "./routes/AdminRoute";
+import AdminDashboard from "./pages/AdminDashboard";
+
+
 import "./styles/App.css";
 
 // Initialize Builder.io
@@ -35,8 +46,10 @@ function AppWrapper() {
   const location = useLocation();
   const isAuthenticated = useIsAuthenticated();
 
-  const [loading, setLoading] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { loading: routeLoading, progress } = useRouteLoader();
+
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [formLoading, setFormLoading] = useState(false);
 
   const currentPath = location.pathname;
   const isLoginPage = currentPath.startsWith("/login");
@@ -52,68 +65,64 @@ function AppWrapper() {
 
   // ---------------- BACKEND CONNECTIVITY CHECK ----------------
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/test")
-      .then((res) => res.json())
-      .catch(() => console.warn("⚠ Backend offline"));
+    fetch("http://127.0.0.1:8000/api/test").catch(() =>
+      console.warn("⚠ Backend offline")
+    );
   }, []);
 
-  // ---------------- FORM SUBMIT HANDLER ----------------
-  const sendFormToBackend = async (formData) => {
-    setLoading(true);
+  // ==========================================================
+  // 🔥 FORM SUBMIT HANDLER (CONNECTED TO LOADER)
+  // ==========================================================
+  const sendFormToBackend = async (cleanData, userId) => {
+    setFormLoading(true);
+
     try {
       await fetch("http://127.0.0.1:8000/api/submit-health-data", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        headers: {
+          "Content-Type": "application/json",
+          "x-user-id": userId,
+        },
+        body: JSON.stringify(cleanData),
       });
 
-      alert("✔ Form Submitted Successfully!");
-      navigate("/dashboard");
-    } catch (error) {
-      console.error(error);
-      alert("❌ Error sending data.");
+      localStorage.setItem("healthFormFilled", "true");
+
+      // 🔥 LET LOADER RENDER
+      setTimeout(() => {
+        navigate("/dashboard");
+        setFormLoading(false);
+      }, 1200);
+
+    } catch (err) {
+      setFormLoading(false);
+      alert("❌ Error submitting data");
     }
-    setLoading(false);
   };
+
+  
 
   return (
     <>
-      {/* HEADER (hidden on login page) */}
-      {isAuthenticated && !isLoginPage && (
-        <header className="app-header">
-          {!isHealthForm && (
-            <button
-              className="menu-button"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-            >
-              ☰
-            </button>
-          )}
-
-          <div className="header-right">
-            <img
-              src="/logo2.png"
-              alt="Logo"
-              className="header-small-logo"
-            />
-            <h2>Personalized Health System</h2>
-          </div>
-        </header>
+      {/* 🔥 GLOBAL ROUTE LOADER */}
+      {(routeLoading || formLoading) && (
+        <GlobalLoader progress={progress} />
       )}
 
-      {/* MAIN PAGE LAYOUT */}
+      {/* ---------------- LAYOUT ---------------- */}
       <div
         className={`layout ${sidebarOpen ? "sidebar-open" : ""} ${
           isLoginPage ? "login-layout" : ""
         }`}
       >
-
-        {/* Sidebar hidden on login & health form */}
+        {/* Sidebar */}
         {isAuthenticated && !isLoginPage && !isHealthForm && (
-          <Sidebar open={sidebarOpen} />
+          // <Sidebar open={sidebarOpen} />
+          <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+
         )}
 
-        {/* MAIN CONTENT */}
+        {/* ---------------- MAIN CONTENT ---------------- */}
         <main
           className="app-content"
           style={{
@@ -121,81 +130,80 @@ function AppWrapper() {
             justifyContent: isHealthForm ? "center" : "flex-start",
           }}
         >
-          <Routes>
-            {/* Public */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/auth/callback" element={<AuthCallback />} />
+         <Routes>
+  {/* ---------------- PUBLIC ---------------- */}
+  <Route path="/login" element={<Login />} />
+  <Route path="/auth/callback" element={<AuthCallback />} />
 
-            {/* Private Routes */}
-            <Route
-              path="/health-form"
-              element={
-                <ProtectedRoute>
-                  <SubmitForm onSubmit={sendFormToBackend} />
-                </ProtectedRoute>
-              }
-            />
+  {/* ---------------- PRIVATE ---------------- */}
+  <Route
+    path="/health-form"
+    element={
+      <ProtectedRoute>
+        <SubmitForm onSubmit={sendFormToBackend} />
+      </ProtectedRoute>
+    }
+  />
 
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
+  <Route
+    path="/dashboard"
+    element={
+      <ProtectedRoute>
+        <Dashboard />
+      </ProtectedRoute>
+    }
+  />
 
-            <Route
-              path="/insights"
-              element={
-                <ProtectedRoute>
-                  <Insights />
-                </ProtectedRoute>
-              }
-            />
+  <Route
+    path="/insights"
+    element={
+      <ProtectedRoute>
+        <Insights />
+      </ProtectedRoute>
+    }
+  />
 
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
+  <Route
+    path="/profile"
+    element={
+      <ProtectedRoute>
+        <Profile />
+      </ProtectedRoute>
+    }
+  />
 
-            <Route
-              path="/analysis"
-              element={
-                <ProtectedRoute>
-                  <Analysis />
-                </ProtectedRoute>
-              }
-            />
+  <Route
+    path="/analysis"
+    element={
+      <ProtectedRoute>
+        <Analysis />
+      </ProtectedRoute>
+    }
+  />
 
-            <Route
-              path="/chatbot"
-              element={
-                <ProtectedRoute>
-                  <ChatBot />
-                </ProtectedRoute>
-              }
-            />
+  
 
-            {/* fallback */}
-            <Route path="*" element={<Login />} />
-          </Routes>
+  {/* ---------------- ADMIN (STEP-6) ---------------- */}
+  <Route
+    path="/admin"
+    element={
+      <AdminRoute>
+        <AdminDashboard />
+      </AdminRoute>
+    }
+  />
+
+  {/* ---------------- FALLBACK ---------------- */}
+  <Route path="*" element={<Login />} />
+</Routes>
         </main>
       </div>
 
-      {/* Builder.io dynamic pages */}
-      <BuilderComponent model="page" />
+      {/* 🔥 FLOATING CHATBOT */}
+      {isAuthenticated && <ChatBot embedded />}
 
-      {/* Loader */}
-      {loading && (
-        <p style={{ textAlign: "center", padding: "10px", color: "orange" }}>
-          ⏳ Sending data...
-        </p>
-      )}
+      {/* Builder.io pages */}
+      <BuilderComponent model="page" />
     </>
   );
 }
@@ -205,6 +213,9 @@ export default function App() {
   return (
     <MsalProvider instance={msalInstance}>
       <Router>
+        {/* 🎥 BACKGROUND VIDEO */}
+        <BackgroundVideo />
+
         <AppWrapper />
       </Router>
     </MsalProvider>

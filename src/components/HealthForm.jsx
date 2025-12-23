@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-function HealthForm({ onSubmit }) {
+function HealthForm({ onSubmit, previousData }) {
+
+  // ---------- INITIAL STATE (supports Edit Mode) ----------
   const initialState = {
     age: "",
     gender: "",
@@ -14,8 +16,27 @@ function HealthForm({ onSubmit }) {
     workoutMinutes: "",
   };
 
+  // If previousData is provided → prefill the form
   const [formData, setFormData] = useState(initialState);
 
+  useEffect(() => {
+    if (previousData) {
+      setFormData({
+        age: previousData.age || "",
+        gender: previousData.gender || "",
+        height: previousData.height || "",
+        weight: previousData.weight || "",
+        bloodPressureSys: previousData.bloodPressureSys || "",
+        bloodPressureDia: previousData.bloodPressureDia || "",
+        heartRate: previousData.heartRate || "",
+        sleepHours: previousData.sleepHours || "",
+        waterIntake: previousData.waterIntake || "",
+        workoutMinutes: previousData.workoutMinutes || "",
+      });
+    }
+  }, [previousData]);
+
+  // ---------- FIELD LABELS ----------
   const customLabels = {
     sleepHours: "Sleep (hours/day)",
     waterIntake: "Water Intake (liters/day)",
@@ -28,11 +49,13 @@ function HealthForm({ onSubmit }) {
     customLabels[field] ||
     field.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase());
 
+  // ---------- INPUT HANDLER ----------
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  // ---------- SUBMIT HANDLER ----------
   const handleSubmit = async (e) => {
     e.preventDefault();
     await onSubmit(formData);
@@ -43,8 +66,10 @@ function HealthForm({ onSubmit }) {
     <div style={container}>
       <div style={formWrapper}>
         
-        {/* Optional Title */}
-        <h3 style={title}>Submit Health Data</h3>
+        {/* Page Title */}
+        <h3 style={title}>
+          {previousData ? "Edit Health Data" : "Submit Health Data"}
+        </h3>
 
         <form onSubmit={handleSubmit} style={formGrid}>
           {Object.keys(initialState).map((field) => (
@@ -70,7 +95,9 @@ function HealthForm({ onSubmit }) {
                   value={formData[field]}
                   onChange={handleChange}
                   required
-                  placeholder={field === "height" ? "Format: 5.8 (ft.inches)" : ""}
+                  placeholder={
+                    field === "height" ? "Format: 5.8 (ft.inches)" : ""
+                  }
                   style={inputStyle}
                   type="text"
                 />
@@ -79,7 +106,7 @@ function HealthForm({ onSubmit }) {
           ))}
 
           <button type="submit" style={submitBtn}>
-            Submit
+            {previousData ? "Update" : "Submit"}
           </button>
         </form>
       </div>
@@ -95,33 +122,37 @@ const container = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  background: "#ffffff",
   padding: "30px 15px",
 };
 
+/* 🔥 GLASS CARD */
 const formWrapper = {
   width: "100%",
   maxWidth: "650px",
-  backgroundColor: "white",
   padding: "35px",
   borderRadius: "18px",
-  boxShadow: "0px 6px 20px rgba(0,0,0,0.08)",
   boxSizing: "border-box",
-};
 
-/* Responsive grid */
-const formGrid = {
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-  gap: "20px",
+  background: "rgba(255, 255, 255, 0.82)",
+  backdropFilter: "blur(16px)",
+  WebkitBackdropFilter: "blur(16px)",
+
+  border: "1px solid rgba(255, 255, 255, 0.4)",
+  boxShadow: "0 18px 40px rgba(0, 0, 0, 0.18)"
 };
 
 const title = {
   textAlign: "center",
   marginBottom: "25px",
   fontSize: "22px",
-  fontWeight: "600",
-  color: "#333",
+  fontWeight: "700",
+  color: "#111827",
+};
+
+const formGrid = {
+  display: "grid",
+  gridTemplateColumns: "1fr 1fr",
+  gap: "20px",
 };
 
 const inputGroup = {
@@ -133,35 +164,48 @@ const label = {
   fontWeight: "600",
   marginBottom: "6px",
   fontSize: "14px",
+  color: "#374151",
 };
 
+/* INPUT */
 const inputStyle = {
-  padding: "10px",
-  borderRadius: "8px",
-  border: "1px solid #ccc",
+  padding: "11px 12px",
+  borderRadius: "10px",
+  border: "1px solid rgba(0,0,0,0.15)",
   fontSize: "15px",
-  width: "100%",
+  background: "rgba(255,255,255,0.9)",
+  outline: "none",
 };
 
+/* 🔥 PREMIUM BUTTON */
 const submitBtn = {
   gridColumn: "span 2",
   width: "100%",
   marginTop: "30px",
   padding: "14px",
-  fontSize: "18px",
+  fontSize: "17px",
   fontWeight: "600",
-  background: "#007bff",
-  color: "white",
-  border: "none",
-  borderRadius: "8px",
+
+  background: "linear-gradient(135deg, #1f2937, #020617)",
+  color: "#e5e7eb",
+
+  border: "1px solid rgba(255,255,255,0.15)",
+  borderRadius: "12px",
   cursor: "pointer",
+
+  transition: "all 0.3s ease",
+};
+
+/* Hover Effect */
+submitBtn["&:hover"] = {
+  transform: "translateY(-1px)",
+  boxShadow: "0 10px 25px rgba(0,0,0,0.25)"
 };
 
 /* --------- RESPONSIVE FIX -------- */
 if (window.innerWidth < 768) {
   formGrid.gridTemplateColumns = "1fr";
 }
-
 
 
 

@@ -8,7 +8,9 @@ export default function Dashboard({ sidebarOpen }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const account = instance.getActiveAccount();
+   const account =
+  instance.getActiveAccount() || instance.getAllAccounts()[0];
+
     if (!account) {
       console.warn("No active MSAL account found");
       return;

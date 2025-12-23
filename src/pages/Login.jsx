@@ -9,15 +9,12 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      // STEP 1 — Microsoft Login
       const response = await instance.loginPopup(loginRequest);
       const account = response.account;
       instance.setActiveAccount(account);
 
-      // Store user_id in localStorage
       localStorage.setItem("user_id", account.localAccountId);
 
-      // STEP 2 — Check user in backend
       const res = await fetch("http://127.0.0.1:8000/auth/check-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -25,18 +22,17 @@ export default function Login() {
           azure_id: account.localAccountId,
           name: account.name,
           email: account.username,
-          profile_pic: ""
-        })
+          profile_pic: "",
+        }),
       });
 
       const data = await res.json();
 
-      // STEP 3 — Redirect based on "exists"
       if (data.exists) {
         localStorage.setItem("healthFormFilled", "true");
-        navigate("/dashboard"); // existing user → dashboard
+        navigate("/dashboard");
       } else {
-        navigate("/health-form"); // new user → health form
+        navigate("/health-form");
       }
     } catch (error) {
       if (error.errorCode !== "user_cancelled") {
@@ -46,6 +42,7 @@ export default function Login() {
   };
 
   return (
+    /* ✅ THIS WRAPPER WAS MISSING */
     <div className="login-container">
       <div className="login-box">
         <img src="/logo.png" alt="Agilisium Logo" className="logo" />

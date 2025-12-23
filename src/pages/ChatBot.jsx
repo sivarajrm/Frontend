@@ -1,105 +1,156 @@
 import { useState, useEffect, useRef } from "react";
 import "../styles/chatbot.css";
 
-export default function ChatBot({ sidebarOpen }) {
-  const [messages, setMessages] = useState(() => {
-    return JSON.parse(localStorage.getItem("chatHistory")) || [];
-  });
+/* 🔹 CLEAN + SHORTEN AI RESPONSE */
+const cleanAndShortenText = (text, maxSentences = 4) => {
+  if (!text) return "";
 
+  const cleaned = text
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/\*(.*?)\*/g, "$1")
+    .replace(/`/g, "")
+    .replace(/#+\s?/g, "")
+    .replace(/\b\d+\.\s*/g, "")
+    .replace(/(\d+\.)\s+/g, "\n$1 ")
+    .trim();
+
+  // 🔥 SHORTEN RESPONSE
+  const sentences = cleaned.split(/(?<=[.!?])\s+/);
+  return sentences.slice(0, maxSentences).join(" ");
+};
+
+export default function ChatBot() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const [typing, setTyping] = useState(false); // 👈 AI typing indicator
+  const [typing, setTyping] = useState(false);
+
   const messagesEndRef = useRef(null);
 
-  // Auto scroll
+  /* 🔹 Auto scroll */
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, typing]);
 
-  // Save history
+  /* 🔹 Welcome message */
   useEffect(() => {
-    localStorage.setItem("chatHistory", JSON.stringify(messages));
-  }, [messages]);
+    if (isOpen && messages.length === 0) {
+      setMessages([
+        {
+          from: "bot",
+          text:
+            "👋 Hi! I’m your AI Health Assistant. Ask me about diet, sleep, heart rate, or your health reports.",
+        },
+      ]);
+    }
+  }, [isOpen, messages.length]);
 
+  /* 🔹 Send Message */
+  const sendMessage = async (text = input) => {
+    if (!text.trim()) return;
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
-
-    const userMessage = { sender: "user", text: input };
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prev) => [...prev, { from: "user", text }]);
     setInput("");
-
-    setTyping(true); // ⏳ show typing UI
+    setTyping(true);
 
     try {
       const res = await fetch("http://127.0.0.1:8000/api/chatbot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: input }),
+        body: JSON.stringify({ query: text }),
       });
 
       const data = await res.json();
 
       setTimeout(() => {
-        setMessages(prev => [
-          ...prev,
-          { sender: "bot", text: data.response || data.summary || "⚠ AI error." },
-        ]);
         setTyping(false);
-      }, 1500);
-
+        setMessages((prev) => [
+          ...prev,
+          {
+            from: "bot",
+            text: cleanAndShortenText(
+              data.response || "⚠️ Unable to fetch response."
+            ),
+          },
+        ]);
+      }, 600);
     } catch {
-      setMessages(prev => [
-        ...prev,
-        { sender: "bot", text: "⚠ Failed to connect to AI" },
-      ]);
       setTyping(false);
+      setMessages((prev) => [
+        ...prev,
+        { from: "bot", text: "⚠️ AI connection failed." },
+      ]);
     }
   };
 
-
-  // 🧹 Clear chat
-  const clearChat = () => {
-    localStorage.removeItem("chatHistory");
-    setMessages([]);
-  };
-
-
   return (
-    <div className={`chat-container ${sidebarOpen ? "shifted" : "full"}`}>
-      <div className="chat-header">
-        <h1>AI Health Assistant</h1>
-        <button className="clear-btn" onClick={clearChat}>Clear Chat</button>
+    <>
+      {/* 🤖 FLOATING ROBOT */}
+      <div
+        className="floating-robot"
+        onClick={() => setIsOpen((p) => !p)}
+      >
+        <img src="/medi-robot.png" alt="AI Assistant" />
       </div>
 
-      <p className="subtitle">Ask anything about your health</p>
-
-      <div className="chat-box">
-        {messages.map((msg, i) => (
-          <div key={i} className={`chat-bubble ${msg.sender}`}>
-            {msg.text}
+      {/* 💬 CHAT WINDOW */}
+      {isOpen && (
+        <div className="chat-window">
+          {/* HEADER */}
+          <div className="chat-header">
+            <h3>AI Health Assistant</h3>
+            <button className="close-btn" onClick={() => setIsOpen(false)}>
+              ✕
+            </button>
           </div>
-        ))}
 
-        {/* AI typing indicator */}
-        {typing && (
-          <div className="typing-indicator">
-            <span></span><span></span><span></span>
+          {/* QUICK ACTIONS */}
+          <div className="quick-actions">
+            {[
+              "Diet tips",
+              "Improve sleep",
+              "Heart rate meaning",
+              "Explain my health data",
+            ].map((q) => (
+              <button key={q} onClick={() => sendMessage(q)}>
+                {q}
+              </button>
+            ))}
           </div>
-        )}
 
-        <div ref={messagesEndRef}></div>
-      </div>
+          {/* CHAT BODY */}
+          <div className="chat-body">
+            {messages.map((m, i) => (
+              <div key={i} className={`msg ${m.from}`}>
+                {m.text}
+              </div>
+            ))}
 
-      <div className="chat-input-row">
-        <input
-          type="text"
-          placeholder="Ask something..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-        />
-        <button onClick={sendMessage}>Send</button>
-      </div>
-    </div>
+            {typing && (
+              <div className="msg bot typing">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            )}
+
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* INPUT */}
+          <div className="chat-input">
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Ask something..."
+              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+            />
+            <button className="send-btn" onClick={() => sendMessage()}>
+              ⬆
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

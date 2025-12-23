@@ -25,10 +25,17 @@
 }
 
 .chart-card {
-  background: #fff;
   padding: 20px;
   border-radius: 14px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  background: linear-gradient(
+  135deg,
+  rgba(255, 255, 255, 0.757),
+  rgba(224, 242, 254, 0.45),
+  rgba(186, 229, 253, 0.442)
+  );
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
 }
 
 .chart-card h3 {
@@ -43,11 +50,25 @@
 .desc {
   margin-top: 12px;
   font-size: 0.9rem;
-  color: #666;
+  color: #0e0e0e;
 }
 
 .analysis-container {
   animation: fadeIn 0.3s ease;
+}
+
+/* Center the title */
+.analysis-container h1 {
+  text-align: center;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* Center the subtitle (if any) */
+.analysis-container .subtitle {
+  text-align: center;
+  color: #000000;
+  font-weight: 500;
 }
 
 @keyframes fadeIn {

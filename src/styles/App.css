@@ -1,4 +1,27 @@
 /* RESET */
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  overflow-y: auto; /* lock body scroll */
+  overflow-x: hidden;
+}
+
+/* App content scrolls, NOT background */
+.app-content {
+  height: calc(100vh - 70px);
+  overflow-y: auto;
+  overflow-x: hidden; /* 🔥 IMPORTANT */
+  padding: 30px;
+  padding-bottom: 140px; /* prevent bottom cut */
+  scrollbar-gutter: stable overlay;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.35) transparent;
+}
+
+
 * {
   margin: 0;
   padding: 0;
@@ -7,7 +30,7 @@
 
 /* THEME COLOR */
 :root {
-  --theme-bg: #e9f1ff;
+  --theme-bg:transparent ;
 }
 
 /* ===================== HEADER ===================== */
@@ -66,66 +89,17 @@
   }
 }
 
-/* ===================== SIDEBAR ===================== */
-
-.sidebar {
-  width: 240px;
-  height: 100vh;
-  background: var(--theme-bg);
-  color: #000;
-  padding-top: 20px;
-  position: fixed;
-  top: 70px; /* Below header */
-  left: 0;
-  border-right: 1px solid rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease-in-out;
-}
-
-.sidebar.closed {
-  transform: translateX(-240px);
-}
-
-/* Sidebar Title */
-.sidebar h3 {
-  font-size: 22px;
-  font-weight: 700;
-  margin: 15px 20px;
-}
-
-/* Sidebar Links */
-.sidebar a {
-  text-decoration: none;
-  color: #1a1a1a;
-  font-size: 18px;
-  font-weight: 500;
-  display: block;
-  padding: 12px 20px;
-  transition: background 0.2s, color 0.2s;
-}
-
-/* Active Page */
-.sidebar a.active {
-  background: #4A90FF;
-  color: white;
-  font-weight: 600;
-  border-radius: 6px;
-}
-
-/* Hover */
-.sidebar a:hover {
-  background: #dce9ff;
-  color: #000;
-  font-weight: 600;
-}
-
+/* 
 /* ===================== PAGE LAYOUT ===================== */
 
 .layout {
   display: flex;
+  overflow: hidden;
   width: 100%;
   min-height: 100vh;
-  padding-top: 70px;
+  background: transparent !important;
 }
+
 
 /* ----- FIX LOGIN PAGE ALIGNMENT ----- */
 .login-layout {
@@ -133,13 +107,52 @@
   justify-content: center !important;
   align-items: center !important;
   padding-top: 0 !important;
-  background: #f3f6fb; /* same light background */
+  background: transparent !important;
   height: 100vh;
 }
+
+.login-container {
+  position: fixed;        /* 🔒 fixed to viewport */
+  top: 0;
+  left: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* transparent white shade */
+   background-color: rgba(255, 255, 255, 0.366);
+
+  z-index: 9999;          /* stays above background/video */
+}
+
+.insight-container {
+  padding: 40px;
+  max-width: 1000px;       /* 🔥 prevent overflow */
+  margin: 0 auto;          /* center properly */
+  box-sizing: border-box;
+}
+
+
 
 .login-layout .app-content {
   margin: 0 !important;
   padding: 0 !important;
+  background: transparent !important;
+}
+
+.app-content {
+  background: transparent !important;
+}
+
+.login-box {
+  background: white;
+  padding: 40px;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
 }
 
 
@@ -150,10 +163,12 @@
 
 /* Main content area */
 .app-content {
-  width: 100%;
-  padding: 30px;
-  transition: margin-left 0.3s ease-in-out;
+  flex: 1;
+  min-height: 100vh;
+  overflow-y: auto;
+  padding-bottom: 60px; /* prevents cut-off */
 }
+
 
 /* MOBILE SIDEBAR OVERLAY MODE */
 @media (max-width: 900px) {
@@ -163,12 +178,15 @@
 }
 
 
-/* ===================== Login Page Logo ===================== */
-.logo {
-  width: 140px;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-  object-fit: contain;
-  image-rendering: -webkit-optimize-contrast;
+.app-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.app-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.app-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 10px;
 }

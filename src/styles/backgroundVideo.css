@@ -1,0 +1,18 @@
+/* 🎥 Background video */
+.bg-video {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+/* 🌫️ White shade covering FULL screen (never breaks on scroll) */
+.bg-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(131, 129, 129, 0.55); /* adjust opacity if needed */
+  z-index: -1;
+  pointer-events: none;
+}
