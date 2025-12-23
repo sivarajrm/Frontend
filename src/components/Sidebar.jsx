@@ -77,24 +77,7 @@ export default function Sidebar({ open, setOpen }) {
     );
     setShowMenu(false);
   };
-
-  const handleDeleteAccount = async () => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to permanently delete your account?"
-    );
-    if (!confirmDelete) return;
-
-    try {
-      await fetch(
-        `http://127.0.0.1:8000/api/delete-account/${user.localAccountId}`,
-        { method: "DELETE" }
-      );
-      instance.logoutRedirect();
-    } catch {
-      alert("Failed to delete account");
-    }
-  };
-
+  
   return (
     <>
       {/* 🔥 SIDEBAR TOGGLE BUTTON */}
