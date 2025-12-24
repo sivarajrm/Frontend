@@ -13,7 +13,7 @@ export default function Insights({ sidebarOpen }) {
 
     const userId = account.localAccountId;
 
-    fetch(`http://backend-health-system.onrender.com/api/latest-insight/${userId}`)
+    fetch(`https://backend-health-system.onrender.com/api/latest-insight/${userId}`)
       .then((res) => res.json())
       .then((data) => {
         setInsight(data);
