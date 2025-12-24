@@ -18,7 +18,7 @@ export default function Dashboard({ sidebarOpen }) {
 
     const userId = account.localAccountId;
 
-    fetch(`http://127.0.0.1:8000/api/latest-health-record/${userId}`)
+    fetch(`http://backend-health-system.onrender.com/api/latest-health-record/${userId}`)
       .then((res) => res.json())
       .then((data) => {
         setData(data);
