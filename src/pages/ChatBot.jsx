@@ -54,7 +54,7 @@ export default function ChatBot() {
     setTyping(true);
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/chatbot", {
+      const res = await fetch("https://backend-health-system.onrender.com/api/chatbot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: text }),
